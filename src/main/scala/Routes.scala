@@ -1,6 +1,13 @@
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import spray.json.DefaultJsonProtocol._
+
+
+case class Id(id: String)
 
 object Routes {
+
+  implicit val fm = jsonFormat1(Id)
 
   val route = {
     path("hello") {
@@ -32,13 +39,11 @@ object Routes {
     } ~
     path("entity") {
       post {
-        entity(as[String]) { str =>
+        entity(as[Id]) { ent =>
           complete {
-            str.toUpperCase
+            Id(ent.id.toUpperCase)
           }
-
         }
-
       }
     }
   }

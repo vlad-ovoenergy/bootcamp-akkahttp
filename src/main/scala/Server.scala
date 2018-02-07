@@ -15,16 +15,16 @@ object Server extends App {
   val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
     Http().bind(interface = "localhost", port = 8080)
 
-  val requestHandler: HttpRequest => Future[HttpResponse] = {
-    case HttpRequest(HttpMethods.GET, Uri.Path("/hello"), _, _, _) => Future {
+  val requestHandler: HttpRequest => HttpResponse = {
+    case HttpRequest(HttpMethods.GET, Uri.Path("/hello"), _, _, _) =>
       HttpResponse(entity = HttpEntity(
         ContentTypes.`text/html(UTF-8)`,
         "<html><body>Hello world!</body></html>"))
-    }
   }
 
   val bindingFuture: Future[Http.ServerBinding] =
     Http().bindAndHandle(Routes.route, "localhost", 8080)
+
 
 //  val bindingFuture: Future[Http.ServerBinding] =
 //    serverSource.to(Sink.foreach { connection =>
