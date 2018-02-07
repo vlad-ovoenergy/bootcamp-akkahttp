@@ -10,12 +10,25 @@ object Routes {
         }
       }
     } ~
-    path("bye") {
+    path("ip") {
       get {
-        complete {
-          "bye"
+        extractClientIP { ip =>
+          complete {
+            ip.toString
+          }
+
         }
       }
-    }
+    } ~
+      path("method") {
+        get {
+          extractMethod { meth =>
+            complete {
+              meth.toString
+            }
+
+          }
+        }
+      }
   }
 }

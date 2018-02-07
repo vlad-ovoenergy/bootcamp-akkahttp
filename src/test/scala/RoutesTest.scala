@@ -14,9 +14,14 @@ class RoutesTest extends WordSpec with Matchers with ScalatestRouteTest  {
         responseAs[String] shouldEqual "hello"
       }
     }
-    "return bye " in {
-      Get("/bye") ~> routes ~> check {
-        responseAs[String] shouldEqual "bye"
+    "return ip " in {
+      Get("/ip") ~> routes ~> check {
+        responseAs[String] shouldEqual "unknown"
+      }
+    }
+    "return request method " in {
+      Get("/method") ~> routes ~> check {
+        responseAs[String] shouldEqual "HttpMethod(GET)"
       }
     }
   }
