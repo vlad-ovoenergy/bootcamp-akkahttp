@@ -20,15 +20,26 @@ object Routes {
         }
       }
     } ~
-      path("method") {
-        get {
-          extractMethod { meth =>
-            complete {
-              meth.toString
-            }
-
+    path("method") {
+      get {
+        extractMethod { meth =>
+          complete {
+            meth.toString
           }
+
         }
       }
+    } ~
+    path("entity") {
+      post {
+        entity(as[String]) { str =>
+          complete {
+            str.toUpperCase
+          }
+
+        }
+
+      }
+    }
   }
 }

@@ -24,5 +24,12 @@ class RoutesTest extends WordSpec with Matchers with ScalatestRouteTest  {
         responseAs[String] shouldEqual "HttpMethod(GET)"
       }
     }
+
+    "return posted string in upper case " in {
+      val body = "this is a body"
+      Post("/entity", body) ~> routes ~> check {
+        responseAs[String] shouldEqual body.toUpperCase
+      }
+    }
   }
 }
