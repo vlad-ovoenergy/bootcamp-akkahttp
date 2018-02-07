@@ -8,16 +8,15 @@ import scala.concurrent.Future
 
 object Server extends App {
 
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
-  implicit val executionContext = system.dispatcher
+  implicit val sys = ActorSystem()
+  implicit val mat = ActorMaterializer()
+  implicit val ec = sys.dispatcher
 
   val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
     Http().bind(interface = "localhost", port = 8080)
 
-
   val requestHandler: HttpRequest => Future[HttpResponse] = {
-    case HttpRequest(HttpMethods.GET, Uri.Path("/hello"), _, _, _) => Future{
+    case HttpRequest(HttpMethods.GET, Uri.Path("/hello"), _, _, _) => Future {
       HttpResponse(entity = HttpEntity(
         ContentTypes.`text/html(UTF-8)`,
         "<html><body>Hello world!</body></html>"))
@@ -25,11 +24,14 @@ object Server extends App {
   }
 
   val bindingFuture: Future[Http.ServerBinding] =
-    serverSource.to(Sink.foreach { connection => // foreach materializes the source
-      println("Accepted new connection from " + connection.remoteAddress)
+    Http().bindAndHandle(Routes.route, "localhost", 8080)
 
-
-      connection handleWithAsyncHandler requestHandler
-    }).run()
+//  val bindingFuture: Future[Http.ServerBinding] =
+//    serverSource.to(Sink.foreach { connection =>
+//      println("Accepted new connection from " + connection.remoteAddress)
+//
+//      connection handleWithAsyncHandler requestHandler
+//
+//    }).run()
 
 }
